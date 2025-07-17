@@ -7,11 +7,9 @@ export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navigation = [
-    { name: 'Home', to: '/' },
+    { name: 'Home', to: '/home' },
     { name: 'Quiz', to: '/quiz' },
-    { name: 'Recommendations', to: '/recommendations' },
-    { name: 'Login', to: '/login'},
-    { name: 'Signup', to: '/signup'}
+    { name: 'Recommendations', to: '/recommendations' }
   ];
 
   return (
