@@ -8,6 +8,9 @@ import Quiz from "./pages/Quiz";
 import Recommendations from "./pages/Recommendations";
 import NotFound from "./pages/NotFound";
 import { QuizProvider } from "./contexts/QuizContext";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+
 
 const queryClient = new QueryClient();
 
@@ -22,6 +25,8 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/quiz" element={<Quiz />} />
             <Route path="/recommendations" element={<Recommendations />} />
+            <Route path="/login" element={<Login />} />   
+            <Route path="/signup" element={<Signup />} /> 
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
@@ -32,3 +37,5 @@ const App = () => (
 );
 
 export default App;
+
+

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -9,6 +10,9 @@ export const Header = () => {
     { name: 'Home', href: '/' },
     { name: 'Quiz', href: '/quiz' },
     { name: 'Recommendations', href: '/recommendations' },
+    { name: 'Login', href: '/login'},
+    { name: 'Signup', href: '/signup'}
+
   ];
 
   return (
@@ -23,13 +27,13 @@ export const Header = () => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-8">
             {navigation.map((item) => (
-              <a
+              <Link
                 key={item.name}
                 href={item.href}
                 className="text-foreground hover:text-primary transition-colors duration-200 font-medium"
               >
                 {item.name}
-              </a>
+              </Link>
             ))}
           </nav>
 
