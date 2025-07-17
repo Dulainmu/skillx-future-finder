@@ -1,116 +1,153 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowRight, Brain, Search, Target, Zap } from 'lucide-react';
+import { ArrowRight, Brain, Search, Target, Zap, Sparkles, TrendingUp, Users } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import heroImage from '@/assets/hero-image.jpg';
 
 export const HeroSection = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="relative py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-background to-muted">
-      <div className="max-w-7xl mx-auto">
-        {/* Welcome Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-primary mb-6 leading-tight">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-background via-background to-muted/20">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-primary/5 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
+        <div className="absolute top-40 right-10 w-72 h-72 bg-secondary/5 rounded-full mix-blend-multiply filter blur-xl animate-pulse animation-delay-2000"></div>
+        <div className="absolute -bottom-32 left-1/2 w-72 h-72 bg-accent/5 rounded-full mix-blend-multiply filter blur-xl animate-pulse animation-delay-4000"></div>
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        {/* Welcome Header with Enhanced Styling */}
+        <div className="text-center mb-20">
+          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-6">
+            <Sparkles className="w-4 h-4" />
+            AI-Powered Career Discovery
+          </div>
+          
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-primary via-primary to-secondary bg-clip-text text-transparent mb-8 leading-tight">
             Welcome to SkillX
           </h1>
-          <p className="text-lg sm:text-xl text-foreground mb-8 leading-relaxed max-w-3xl mx-auto">
-            Discover your ideal career path through our AI-powered platform. Choose how you'd like to begin your journey.
+          
+          <p className="text-xl sm:text-2xl text-muted-foreground mb-12 leading-relaxed max-w-4xl mx-auto">
+            Discover your ideal career path through our AI-powered platform. 
+            <span className="text-foreground font-medium"> Choose how you'd like to begin your journey.</span>
           </p>
+
+          {/* Stats Section */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-2xl mx-auto mb-16">
+            <div className="text-center">
+              <div className="text-3xl font-bold text-primary mb-2">10,000+</div>
+              <div className="text-sm text-muted-foreground">Career Paths Analyzed</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-secondary mb-2">95%</div>
+              <div className="text-sm text-muted-foreground">Accuracy Rate</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-accent mb-2">50K+</div>
+              <div className="text-sm text-muted-foreground">Happy Users</div>
+            </div>
+          </div>
         </div>
 
-        {/* Two Options Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
-          {/* Option 1: Take Quiz */}
-          <Card className="group hover:shadow-xl transition-all duration-300 cursor-pointer border-2 hover:border-primary/50" 
+        {/* Enhanced Two Options Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+          {/* Option 1: Take Quiz - Enhanced */}
+          <Card className="group relative overflow-hidden hover:shadow-2xl transition-all duration-500 cursor-pointer border-2 hover:border-primary/50 hover:-translate-y-2 bg-gradient-to-br from-card to-card/50" 
                 onClick={() => navigate('/quiz')}>
-            <CardHeader className="text-center pb-4">
-              <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
-                <Brain className="w-8 h-8 text-primary" />
+            {/* Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            
+            <CardHeader className="text-center pb-6 relative z-10">
+              <div className="mx-auto w-20 h-20 bg-gradient-to-br from-primary/20 to-primary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-lg">
+                <Brain className="w-10 h-10 text-primary" />
               </div>
-              <CardTitle className="text-2xl font-bold text-primary">Take Personality Quiz</CardTitle>
-              <CardDescription className="text-base">
-                Answer 12 questions designed by career experts to discover careers that match your personality
+              <CardTitle className="text-3xl font-bold text-primary mb-3">Take Personality Quiz</CardTitle>
+              <CardDescription className="text-lg text-muted-foreground">
+                Answer 12 expertly designed questions to discover careers that perfectly match your unique personality and strengths
               </CardDescription>
             </CardHeader>
-            <CardContent className="text-center">
-              <div className="space-y-3 mb-6">
-                <div className="flex items-center text-sm text-muted-foreground">
-                  <Zap className="w-4 h-4 mr-2 text-success" />
-                  <span>AI-powered personality analysis</span>
+            
+            <CardContent className="text-center relative z-10">
+              <div className="space-y-4 mb-8">
+                <div className="flex items-center justify-center text-sm text-muted-foreground bg-muted/50 rounded-lg p-3">
+                  <Zap className="w-5 h-5 mr-3 text-primary" />
+                  <span className="font-medium">AI-powered personality analysis</span>
                 </div>
-                <div className="flex items-center text-sm text-muted-foreground">
-                  <Target className="w-4 h-4 mr-2 text-success" />
-                  <span>Personalized career recommendations</span>
+                <div className="flex items-center justify-center text-sm text-muted-foreground bg-muted/50 rounded-lg p-3">
+                  <Target className="w-5 h-5 mr-3 text-primary" />
+                  <span className="font-medium">Personalized career recommendations</span>
                 </div>
-                <div className="flex items-center text-sm text-muted-foreground">
-                  <ArrowRight className="w-4 h-4 mr-2 text-success" />
-                  <span>Detailed career roadmaps</span>
+                <div className="flex items-center justify-center text-sm text-muted-foreground bg-muted/50 rounded-lg p-3">
+                  <TrendingUp className="w-5 h-5 mr-3 text-primary" />
+                  <span className="font-medium">Detailed career roadmaps & growth paths</span>
                 </div>
               </div>
+              
               <Button 
                 variant="default" 
                 size="lg" 
-                className="w-full group-hover:translate-y-0 transition-transform"
+                className="w-full h-14 text-lg font-semibold bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary group-hover:scale-105 transition-all duration-300 shadow-lg"
               >
-                Start Quiz
-                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                Start Your Journey
+                <ArrowRight className="ml-3 h-6 w-6 group-hover:translate-x-2 transition-transform duration-300" />
               </Button>
             </CardContent>
           </Card>
 
-          {/* Option 2: Manual Selection */}
-          <Card className="group hover:shadow-xl transition-all duration-300 cursor-pointer border-2 hover:border-secondary/50" 
+          {/* Option 2: Browse Careers - Enhanced */}
+          <Card className="group relative overflow-hidden hover:shadow-2xl transition-all duration-500 cursor-pointer border-2 hover:border-secondary/50 hover:-translate-y-2 bg-gradient-to-br from-card to-card/50" 
                 onClick={() => navigate('/browse-careers')}>
-            <CardHeader className="text-center pb-4">
-              <div className="mx-auto w-16 h-16 bg-secondary/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-secondary/20 transition-colors">
-                <Search className="w-8 h-8 text-secondary" />
+            {/* Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-secondary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            
+            <CardHeader className="text-center pb-6 relative z-10">
+              <div className="mx-auto w-20 h-20 bg-gradient-to-br from-secondary/20 to-secondary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-lg">
+                <Search className="w-10 h-10 text-secondary" />
               </div>
-              <CardTitle className="text-2xl font-bold text-primary">Browse Career Paths</CardTitle>
-              <CardDescription className="text-base">
-                Explore our comprehensive database of careers and choose the ones that interest you most
+              <CardTitle className="text-3xl font-bold text-primary mb-3">Browse Career Paths</CardTitle>
+              <CardDescription className="text-lg text-muted-foreground">
+                Explore our comprehensive database of 100+ careers and choose the ones that spark your interest and passion
               </CardDescription>
             </CardHeader>
-            <CardContent className="text-center">
-              <div className="space-y-3 mb-6">
-                <div className="flex items-center text-sm text-muted-foreground">
-                  <Search className="w-4 h-4 mr-2 text-secondary" />
-                  <span>Browse 100+ career options</span>
+            
+            <CardContent className="text-center relative z-10">
+              <div className="space-y-4 mb-8">
+                <div className="flex items-center justify-center text-sm text-muted-foreground bg-muted/50 rounded-lg p-3">
+                  <Search className="w-5 h-5 mr-3 text-secondary" />
+                  <span className="font-medium">Browse 100+ career options</span>
                 </div>
-                <div className="flex items-center text-sm text-muted-foreground">
-                  <Target className="w-4 h-4 mr-2 text-secondary" />
-                  <span>Filter by industry & interests</span>
+                <div className="flex items-center justify-center text-sm text-muted-foreground bg-muted/50 rounded-lg p-3">
+                  <Target className="w-5 h-5 mr-3 text-secondary" />
+                  <span className="font-medium">Filter by industry & interests</span>
                 </div>
-                <div className="flex items-center text-sm text-muted-foreground">
-                  <ArrowRight className="w-4 h-4 mr-2 text-secondary" />
-                  <span>Get detailed career information</span>
+                <div className="flex items-center justify-center text-sm text-muted-foreground bg-muted/50 rounded-lg p-3">
+                  <Users className="w-5 h-5 mr-3 text-secondary" />
+                  <span className="font-medium">Real industry insights & salary data</span>
                 </div>
               </div>
+              
               <Button 
                 variant="secondary" 
                 size="lg" 
-                className="w-full group-hover:translate-y-0 transition-transform"
+                className="w-full h-14 text-lg font-semibold group-hover:scale-105 transition-all duration-300 shadow-lg"
               >
                 Explore Careers
-                <Search className="ml-2 h-5 w-5 group-hover:scale-110 transition-transform" />
+                <Search className="ml-3 h-6 w-6 group-hover:scale-125 transition-transform duration-300" />
               </Button>
             </CardContent>
           </Card>
         </div>
 
-        {/* Hero Image */}
-        <div className="relative max-w-4xl mx-auto">
-          <div className="aspect-video rounded-2xl overflow-hidden shadow-card">
-            <img
-              src={heroImage}
-              alt="Career guidance illustration"
-              className="w-full h-full object-cover"
-            />
+        {/* Call to Action Section */}
+        <div className="text-center mt-20">
+          <p className="text-lg text-muted-foreground mb-6">
+            Join thousands of professionals who found their perfect career match
+          </p>
+          <div className="flex justify-center space-x-2">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="w-2 h-2 bg-primary rounded-full animate-pulse" style={{ animationDelay: `${i * 200}ms` }}></div>
+            ))}
           </div>
-          {/* Decorative elements */}
-          <div className="absolute -top-4 -right-4 w-24 h-24 bg-secondary/20 rounded-full blur-xl"></div>
-          <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-primary/10 rounded-full blur-xl"></div>
         </div>
       </div>
     </section>
