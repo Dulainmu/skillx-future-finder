@@ -92,148 +92,178 @@ const BrowseCareers = () => {
   });
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-background via-background to-muted/10">
       <Header />
       
-      <main className="flex-grow py-8 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          {/* Header Section */}
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-primary mb-4">Explore Career Paths</h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Browse our comprehensive database of careers. Find detailed information about roles, 
-              skills required, and growth opportunities to make informed decisions about your future.
-            </p>
-          </div>
+      <main className="flex-1 relative overflow-hidden">
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-20 left-10 w-96 h-96 bg-secondary/3 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
+          <div className="absolute bottom-20 right-10 w-96 h-96 bg-primary/3 rounded-full mix-blend-multiply filter blur-xl animate-pulse animation-delay-2000"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-accent/3 rounded-full mix-blend-multiply filter blur-xl animate-pulse animation-delay-4000"></div>
+        </div>
 
-          {/* Search and Filter Section */}
-          <div className="mb-8 space-y-4">
-            <div className="flex flex-col sm:flex-row gap-4">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search careers, skills, or keywords..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 h-12"
-                />
+        <div className="relative z-10 py-16 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto">
+            {/* Enhanced Header Section */}
+            <div className="text-center mb-16">
+              <div className="inline-flex items-center gap-2 bg-secondary/10 text-secondary px-4 py-2 rounded-full text-sm font-medium mb-8">
+                <Search className="w-4 h-4" />
+                Career Explorer
               </div>
-              <div className="flex gap-2 items-center">
-                <Filter className="h-4 w-4 text-muted-foreground" />
-                <select
-                  value={selectedIndustry}
-                  onChange={(e) => setSelectedIndustry(e.target.value)}
-                  className="h-12 px-3 rounded-md border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                >
-                  {industries.map(industry => (
-                    <option key={industry} value={industry}>
-                      {industry} Industry
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          </div>
-
-          {/* Results Count */}
-          <div className="mb-6">
-            <p className="text-muted-foreground">
-              Showing {filteredCareers.length} career{filteredCareers.length !== 1 ? 's' : ''}
-              {searchTerm && ` for "${searchTerm}"`}
-              {selectedIndustry && selectedIndustry !== 'All' && ` in ${selectedIndustry}`}
-            </p>
-          </div>
-
-          {/* Career Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredCareers.map((career) => (
-              <Card key={career.id} className="hover:shadow-lg transition-shadow duration-300 cursor-pointer group">
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <CardTitle className="text-xl mb-2 group-hover:text-primary transition-colors">
-                        {career.title}
-                      </CardTitle>
-                      <Badge variant="secondary" className="mb-3">
-                        {career.industry}
-                      </Badge>
-                    </div>
-                    <Briefcase className="h-6 w-6 text-muted-foreground" />
-                  </div>
-                  <CardDescription className="text-sm">
-                    {career.description}
-                  </CardDescription>
-                </CardHeader>
-                
-                <CardContent className="space-y-4">
-                  {/* Key Metrics */}
-                  <div className="grid grid-cols-1 gap-3">
-                    <div className="flex items-center text-sm">
-                      <DollarSign className="h-4 w-4 mr-2 text-success" />
-                      <span className="font-medium">{career.salaryRange}</span>
-                    </div>
-                    <div className="flex items-center text-sm">
-                      <TrendingUp className="h-4 w-4 mr-2 text-success" />
-                      <span>{career.growth} growth rate</span>
-                    </div>
-                    <div className="flex items-center text-sm">
-                      <Clock className="h-4 w-4 mr-2 text-muted-foreground" />
-                      <span>{career.timeToLearn} to learn</span>
-                    </div>
-                  </div>
-
-                  {/* Skills */}
-                  <div>
-                    <h4 className="font-medium text-sm mb-2">Key Skills:</h4>
-                    <div className="flex flex-wrap gap-1">
-                      {career.skills.slice(0, 3).map((skill) => (
-                        <Badge key={skill} variant="outline" className="text-xs">
-                          {skill}
-                        </Badge>
-                      ))}
-                      {career.skills.length > 3 && (
-                        <Badge variant="outline" className="text-xs">
-                          +{career.skills.length - 3} more
-                        </Badge>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Action Button */}
-                  <Button 
-                    className="w-full mt-4" 
-                    variant="outline"
-                    onClick={() => {
-                      // TODO: Navigate to detailed career page or show more info
-                      console.log('Selected career:', career.title);
-                    }}
-                  >
-                    Learn More
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-
-          {/* Empty State */}
-          {filteredCareers.length === 0 && (
-            <div className="text-center py-12">
-              <Search className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-foreground mb-2">No careers found</h3>
-              <p className="text-muted-foreground mb-4">
-                Try adjusting your search terms or filters to find more careers.
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-secondary via-secondary to-primary bg-clip-text text-transparent mb-8">
+                Explore Career Paths
+              </h1>
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+                Browse our comprehensive database of careers. Find detailed information about 
+                <span className="text-foreground font-medium"> roles, skills required, and growth opportunities</span>
               </p>
-              <Button 
-                variant="outline" 
-                onClick={() => {
-                  setSearchTerm('');
-                  setSelectedIndustry('All');
-                }}
-              >
-                Clear Filters
-              </Button>
             </div>
-          )}
+
+            {/* Enhanced Search and Filter Section */}
+            <div className="mb-12">
+              <div className="bg-card/80 backdrop-blur-sm rounded-3xl shadow-xl border border-border/50 p-8">
+                <div className="flex flex-col lg:flex-row gap-6">
+                  <div className="relative flex-1">
+                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <Input
+                      placeholder="Search careers, skills, or keywords..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="pl-12 h-14 text-lg bg-background/50 border-2 hover:border-primary/50 focus:border-primary transition-all duration-300"
+                    />
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Filter className="h-5 w-5 text-muted-foreground" />
+                    <select
+                      value={selectedIndustry}
+                      onChange={(e) => setSelectedIndustry(e.target.value)}
+                      className="h-14 px-4 rounded-xl border-2 border-border bg-background/50 text-foreground hover:border-primary/50 focus:border-primary focus:outline-none transition-all duration-300 min-w-[180px]"
+                    >
+                      {industries.map(industry => (
+                        <option key={industry} value={industry}>
+                          {industry} Industry
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {/* Results Count */}
+                <div className="mt-6 pt-6 border-t border-border/50">
+                  <p className="text-muted-foreground text-center">
+                    <span className="font-semibold text-foreground">{filteredCareers.length}</span> career{filteredCareers.length !== 1 ? 's' : ''} found
+                    {searchTerm && <span> for "<span className="text-primary font-medium">{searchTerm}</span>"</span>}
+                    {selectedIndustry && selectedIndustry !== 'All' && <span> in <span className="text-secondary font-medium">{selectedIndustry}</span></span>}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Enhanced Career Cards Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+              {filteredCareers.map((career, index) => (
+                <Card 
+                  key={career.id} 
+                  className="group hover:shadow-2xl transition-all duration-500 cursor-pointer border-2 hover:border-secondary/50 hover:-translate-y-2 bg-card/80 backdrop-blur-sm relative overflow-hidden"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  {/* Decorative Elements */}
+                  <div className="absolute -top-2 -right-2 w-16 h-16 bg-gradient-to-br from-secondary/20 to-primary/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  
+                  <CardHeader className="relative z-10">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex-1">
+                        <CardTitle className="text-xl mb-3 group-hover:text-secondary transition-colors duration-300">
+                          {career.title}
+                        </CardTitle>
+                        <Badge variant="secondary" className="bg-secondary/10 text-secondary border-secondary/20">
+                          {career.industry}
+                        </Badge>
+                      </div>
+                      <div className="w-12 h-12 bg-secondary/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <Briefcase className="h-6 w-6 text-secondary" />
+                      </div>
+                    </div>
+                    <CardDescription className="text-sm leading-relaxed">
+                      {career.description}
+                    </CardDescription>
+                  </CardHeader>
+                  
+                  <CardContent className="space-y-6 relative z-10">
+                    {/* Enhanced Key Metrics */}
+                    <div className="grid grid-cols-1 gap-4">
+                      <div className="flex items-center text-sm bg-muted/50 p-3 rounded-lg">
+                        <DollarSign className="h-5 w-5 mr-3 text-success" />
+                        <span className="font-semibold">{career.salaryRange}</span>
+                      </div>
+                      <div className="flex items-center text-sm bg-muted/50 p-3 rounded-lg">
+                        <TrendingUp className="h-5 w-5 mr-3 text-success" />
+                        <span className="font-medium">{career.growth} growth rate</span>
+                      </div>
+                      <div className="flex items-center text-sm bg-muted/50 p-3 rounded-lg">
+                        <Clock className="h-5 w-5 mr-3 text-muted-foreground" />
+                        <span className="font-medium">{career.timeToLearn} to learn</span>
+                      </div>
+                    </div>
+
+                    {/* Enhanced Skills */}
+                    <div>
+                      <h4 className="font-semibold text-sm mb-3 text-foreground">Key Skills:</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {career.skills.slice(0, 3).map((skill) => (
+                          <Badge key={skill} variant="outline" className="text-xs border-primary/20 hover:bg-primary/10 transition-colors duration-200">
+                            {skill}
+                          </Badge>
+                        ))}
+                        {career.skills.length > 3 && (
+                          <Badge variant="outline" className="text-xs border-muted-foreground/20">
+                            +{career.skills.length - 3} more
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Enhanced Action Button */}
+                    <Button 
+                      className="w-full h-12 mt-6 bg-gradient-to-r from-secondary to-secondary/90 hover:from-secondary/90 hover:to-secondary/80 group-hover:scale-105 transition-all duration-300 shadow-lg" 
+                      onClick={() => {
+                        console.log('Selected career:', career.title);
+                      }}
+                    >
+                      Learn More
+                      <Search className="ml-2 h-4 w-4" />
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {/* Enhanced Empty State */}
+            {filteredCareers.length === 0 && (
+              <div className="text-center py-20">
+                <div className="bg-card/80 backdrop-blur-sm rounded-3xl shadow-2xl border border-border/50 p-12 max-w-md mx-auto">
+                  <div className="w-20 h-20 bg-muted/50 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Search className="h-10 w-10 text-muted-foreground" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-foreground mb-4">No careers found</h3>
+                  <p className="text-muted-foreground mb-8">
+                    Try adjusting your search terms or filters to find more careers.
+                  </p>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => {
+                      setSearchTerm('');
+                      setSelectedIndustry('All');
+                    }}
+                    className="w-full h-12 hover:scale-105 transition-transform duration-200"
+                  >
+                    Clear Filters
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </main>
       
