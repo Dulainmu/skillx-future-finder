@@ -1,7 +1,9 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { CareerRecommendation } from '@/types/recommendations';
-import { TrendingUp, DollarSign, CheckCircle } from 'lucide-react';
+import { TrendingUp, DollarSign, CheckCircle, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface CareerCardProps {
   recommendation: CareerRecommendation;
@@ -9,6 +11,12 @@ interface CareerCardProps {
 }
 
 export const CareerCard = ({ recommendation, rank }: CareerCardProps) => {
+  const navigate = useNavigate();
+
+  const handleViewRoadmap = () => {
+    navigate(`/career/${recommendation.id}`);
+  };
+
   return (
     <Card 
       className="bg-background shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 h-full"
@@ -64,16 +72,29 @@ export const CareerCard = ({ recommendation, rank }: CareerCardProps) => {
           </div>
         )}
 
-        {/* Roadmap */}
+        {/* Roadmap Preview */}
         <div>
-          <h4 className="font-semibold text-foreground mb-3">Your Roadmap</h4>
-          <ul className="list-disc pl-5 text-muted-foreground space-y-1">
-            {recommendation.roadmap.map((step, index) => (
+          <h4 className="font-semibold text-foreground mb-3">Roadmap Preview</h4>
+          <ul className="list-disc pl-5 text-muted-foreground space-y-1 mb-4">
+            {recommendation.roadmap.slice(0, 3).map((step, index) => (
               <li key={index} className="text-sm leading-relaxed">
                 {step}
               </li>
             ))}
+            {recommendation.roadmap.length > 3 && (
+              <li className="text-sm text-primary font-medium">
+                + {recommendation.roadmap.length - 3} more steps...
+              </li>
+            )}
           </ul>
+          
+          <Button 
+            onClick={handleViewRoadmap}
+            className="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90"
+          >
+            <ArrowRight className="w-4 h-4 mr-2" />
+            Start Career Path
+          </Button>
         </div>
       </CardContent>
     </Card>
