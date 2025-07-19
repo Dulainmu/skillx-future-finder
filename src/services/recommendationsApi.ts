@@ -9,58 +9,112 @@ export const recommendationsApi = {
     // Mock recommendations - in real app this would come from your backend
     return [
       {
-        id: '1',
+        id: 'data-scientist',
         name: 'Data Scientist',
-        description: 'Analyze complex data to uncover insights and drive business decisions using statistical methods and machine learning.',
+        description: 'Analyze large datasets to extract insights and build predictive models using statistical methods and machine learning algorithms',
         matchPercentage: 95,
+        averageSalary: '$90,000 - $150,000',
+        jobGrowth: '22%',
+        difficulty: 'Advanced',
+        skills: ['Python', 'Statistics', 'Machine Learning', 'SQL', 'Data Visualization', 'R'],
         roadmap: [
           'Learn Python programming fundamentals',
           'Master statistics and probability',
-          'Study machine learning algorithms',
-          'Practice with real datasets on Kaggle',
-          'Build a portfolio of data science projects',
-          'Earn relevant certifications (e.g., Google Data Analytics)',
-          'Apply for entry-level data analyst positions'
+          'Understand machine learning algorithms',
+          'Practice with real datasets',
+          'Build portfolio projects'
         ],
-        skills: ['Python', 'SQL', 'Machine Learning', 'Statistics', 'Data Visualization'],
-        averageSalary: '$95,000 - $150,000',
-        jobGrowth: '35% (Much faster than average)'
+        totalXp: 3000
       },
       {
-        id: '2',
+        id: 'ux-designer',
         name: 'UX Designer',
-        description: 'Create intuitive and engaging user experiences for digital products through research, design, and testing.',
+        description: 'Design user-friendly interfaces and improve user experience through research, testing, and iterative design',
         matchPercentage: 88,
-        roadmap: [
-          'Learn design thinking principles',
-          'Master design tools (Figma, Sketch, Adobe XD)',
-          'Study user research methodologies',
-          'Practice wireframing and prototyping',
-          'Build a strong design portfolio',
-          'Take online UX courses or bootcamps',
-          'Seek internships or junior UX roles'
-        ],
-        skills: ['Design Thinking', 'Prototyping', 'User Research', 'Figma', 'Usability Testing'],
         averageSalary: '$75,000 - $120,000',
-        jobGrowth: '13% (Faster than average)'
+        jobGrowth: '13%',
+        difficulty: 'Intermediate',
+        skills: ['Figma', 'User Research', 'Prototyping', 'Design Thinking', 'Wireframing', 'Usability Testing'],
+        roadmap: [
+          'Learn design fundamentals',
+          'Master design tools like Figma',
+          'Understand user research methods',
+          'Practice prototyping',
+          'Build a design portfolio'
+        ],
+        totalXp: 2200
       },
       {
-        id: '3',
-        name: 'Product Manager',
-        description: 'Guide product development from concept to launch, working with cross-functional teams to deliver user-focused solutions.',
-        matchPercentage: 82,
+        id: 'software-engineer',
+        name: 'Software Engineer',
+        description: 'Develop and maintain software applications and systems using various programming languages and frameworks',
+        matchPercentage: 92,
+        averageSalary: '$85,000 - $160,000',
+        jobGrowth: '25%',
+        difficulty: 'Intermediate',
+        skills: ['JavaScript', 'React', 'Node.js', 'Git', 'Database Design', 'Testing'],
         roadmap: [
-          'Understand product management fundamentals',
-          'Learn agile development methodologies',
-          'Develop analytical and technical skills',
-          'Practice project management tools',
-          'Build communication and leadership skills',
-          'Gain experience through side projects or internships',
-          'Network with product management professionals'
+          'Master programming fundamentals',
+          'Learn web development technologies',
+          'Understand database design',
+          'Practice with version control',
+          'Build full-stack applications'
         ],
-        skills: ['Product Strategy', 'Agile', 'Data Analysis', 'Leadership', 'Market Research'],
-        averageSalary: '$85,000 - $140,000',
-        jobGrowth: '19% (Much faster than average)'
+        totalXp: 2800
+      },
+      {
+        id: 'digital-marketing',
+        name: 'Digital Marketing Manager',
+        description: 'Plan and execute digital marketing campaigns across various channels to drive brand awareness and sales',
+        matchPercentage: 85,
+        averageSalary: '$60,000 - $100,000',
+        jobGrowth: '19%',
+        difficulty: 'Beginner-Friendly',
+        skills: ['SEO', 'Google Analytics', 'Content Marketing', 'Social Media', 'PPC', 'Email Marketing'],
+        roadmap: [
+          'Learn digital marketing fundamentals',
+          'Master SEO and content creation',
+          'Understand analytics and metrics',
+          'Practice campaign management',
+          'Build marketing portfolio'
+        ],
+        totalXp: 1800
+      },
+      {
+        id: 'cybersecurity-analyst',
+        name: 'Cybersecurity Analyst',
+        description: 'Protect organizations from cyber threats and security breaches through monitoring, analysis, and incident response',
+        matchPercentage: 90,
+        averageSalary: '$80,000 - $130,000',
+        jobGrowth: '28%',
+        difficulty: 'Advanced',
+        skills: ['Network Security', 'Risk Assessment', 'Incident Response', 'Compliance', 'Penetration Testing', 'SIEM'],
+        roadmap: [
+          'Learn networking fundamentals',
+          'Understand security principles',
+          'Master security tools and techniques',
+          'Practice incident response',
+          'Obtain security certifications'
+        ],
+        totalXp: 3200
+      },
+      {
+        id: 'product-manager',
+        name: 'Product Manager',
+        description: 'Guide product development from conception to launch, working with cross-functional teams to deliver successful products',
+        matchPercentage: 87,
+        averageSalary: '$95,000 - $170,000',
+        jobGrowth: '15%',
+        difficulty: 'Advanced',
+        skills: ['Strategy', 'Analytics', 'Communication', 'Agile', 'Market Research', 'Product Design'],
+        roadmap: [
+          'Learn product management fundamentals',
+          'Understand market research and analytics',
+          'Master agile methodologies',
+          'Practice stakeholder management',
+          'Build product case studies'
+        ],
+        totalXp: 2600
       }
     ];
   }
