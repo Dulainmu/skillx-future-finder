@@ -1,95 +1,154 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Search, Filter, Briefcase, TrendingUp, DollarSign, Clock } from 'lucide-react';
+import { Search, Filter, Briefcase, TrendingUp, DollarSign, Clock, ArrowRight, Rocket } from 'lucide-react';
+import { CareerRecommendation } from '@/types/recommendations';
 
-// Sample career data
-const careers = [
+// Sample career data - converted to CareerRecommendation format
+const careers: CareerRecommendation[] = [
   {
-    id: 1,
-    title: "Data Scientist",
-    description: "Analyze large datasets to extract insights and build predictive models",
-    industry: "Technology",
-    salaryRange: "$90,000 - $150,000",
-    growth: "22%",
-    timeToLearn: "2-4 years",
-    skills: ["Python", "Statistics", "Machine Learning", "SQL"],
-    tags: ["analytical", "tech", "high-growth"]
+    id: "data-scientist",
+    name: "Data Scientist",
+    description: "Analyze large datasets to extract insights and build predictive models using statistical methods and machine learning algorithms",
+    matchPercentage: 95,
+    averageSalary: "$90,000 - $150,000",
+    jobGrowth: "22%",
+    difficulty: "Advanced",
+    skills: ["Python", "Statistics", "Machine Learning", "SQL", "Data Visualization", "R"],
+    roadmap: [
+      "Learn Python programming fundamentals",
+      "Master statistics and probability",
+      "Understand machine learning algorithms",
+      "Practice with real datasets",
+      "Build portfolio projects"
+    ],
+    totalXp: 3000
   },
   {
-    id: 2,
-    title: "UX Designer",
-    description: "Design user-friendly interfaces and improve user experience",
-    industry: "Design",
-    salaryRange: "$75,000 - $120,000", 
-    growth: "13%",
-    timeToLearn: "1-3 years",
-    skills: ["Figma", "User Research", "Prototyping", "Design Thinking"],
-    tags: ["creative", "user-focused", "collaborative"]
+    id: "ux-designer",
+    name: "UX Designer", 
+    description: "Design user-friendly interfaces and improve user experience through research, testing, and iterative design",
+    matchPercentage: 88,
+    averageSalary: "$75,000 - $120,000",
+    jobGrowth: "13%",
+    difficulty: "Intermediate",
+    skills: ["Figma", "User Research", "Prototyping", "Design Thinking", "Wireframing", "Usability Testing"],
+    roadmap: [
+      "Learn design fundamentals",
+      "Master design tools like Figma",
+      "Understand user research methods",
+      "Practice prototyping",
+      "Build a design portfolio"
+    ],
+    totalXp: 2200
   },
   {
-    id: 3,
-    title: "Software Engineer",
-    description: "Develop and maintain software applications and systems",
-    industry: "Technology",
-    salaryRange: "$85,000 - $160,000",
-    growth: "25%",
-    timeToLearn: "2-4 years",
-    skills: ["JavaScript", "React", "Node.js", "Git"],
-    tags: ["technical", "problem-solving", "high-demand"]
+    id: "software-engineer",
+    name: "Software Engineer",
+    description: "Develop and maintain software applications and systems using various programming languages and frameworks",
+    matchPercentage: 92,
+    averageSalary: "$85,000 - $160,000", 
+    jobGrowth: "25%",
+    difficulty: "Intermediate",
+    skills: ["JavaScript", "React", "Node.js", "Git", "Database Design", "Testing"],
+    roadmap: [
+      "Master programming fundamentals",
+      "Learn web development technologies",
+      "Understand database design",
+      "Practice with version control",
+      "Build full-stack applications"
+    ],
+    totalXp: 2800
   },
   {
-    id: 4,
-    title: "Digital Marketing Manager",
-    description: "Plan and execute digital marketing campaigns across various channels",
-    industry: "Marketing",
-    salaryRange: "$60,000 - $100,000",
-    growth: "19%",
-    timeToLearn: "1-2 years",
-    skills: ["SEO", "Google Analytics", "Content Marketing", "Social Media"],
-    tags: ["creative", "analytical", "versatile"]
+    id: "digital-marketing",
+    name: "Digital Marketing Manager",
+    description: "Plan and execute digital marketing campaigns across various channels to drive brand awareness and sales",
+    matchPercentage: 85,
+    averageSalary: "$60,000 - $100,000",
+    jobGrowth: "19%", 
+    difficulty: "Beginner-Friendly",
+    skills: ["SEO", "Google Analytics", "Content Marketing", "Social Media", "PPC", "Email Marketing"],
+    roadmap: [
+      "Learn digital marketing fundamentals",
+      "Master SEO and content creation",
+      "Understand analytics and metrics",
+      "Practice campaign management",
+      "Build marketing portfolio"
+    ],
+    totalXp: 1800
   },
   {
-    id: 5,
-    title: "Cybersecurity Analyst",
-    description: "Protect organizations from cyber threats and security breaches",
-    industry: "Technology",
-    salaryRange: "$80,000 - $130,000",
-    growth: "28%",
-    timeToLearn: "2-3 years",
-    skills: ["Network Security", "Risk Assessment", "Incident Response", "Compliance"],
-    tags: ["security", "analytical", "critical"]
+    id: "cybersecurity-analyst",
+    name: "Cybersecurity Analyst",
+    description: "Protect organizations from cyber threats and security breaches through monitoring, analysis, and incident response",
+    matchPercentage: 90,
+    averageSalary: "$80,000 - $130,000",
+    jobGrowth: "28%",
+    difficulty: "Advanced", 
+    skills: ["Network Security", "Risk Assessment", "Incident Response", "Compliance", "Penetration Testing", "SIEM"],
+    roadmap: [
+      "Learn networking fundamentals",
+      "Understand security principles",
+      "Master security tools and techniques",
+      "Practice incident response",
+      "Obtain security certifications"
+    ],
+    totalXp: 3200
   },
   {
-    id: 6,
-    title: "Product Manager",
-    description: "Guide product development from conception to launch",
-    industry: "Business",
-    salaryRange: "$95,000 - $170,000",
-    growth: "15%",
-    timeToLearn: "3-5 years",
-    skills: ["Strategy", "Analytics", "Communication", "Agile"],
-    tags: ["leadership", "strategic", "cross-functional"]
+    id: "product-manager",
+    name: "Product Manager",
+    description: "Guide product development from conception to launch, working with cross-functional teams to deliver successful products",
+    matchPercentage: 87,
+    averageSalary: "$95,000 - $170,000",
+    jobGrowth: "15%",
+    difficulty: "Advanced",
+    skills: ["Strategy", "Analytics", "Communication", "Agile", "Market Research", "Product Design"],
+    roadmap: [
+      "Learn product management fundamentals",
+      "Understand market research and analytics",
+      "Master agile methodologies",
+      "Practice stakeholder management",
+      "Build product case studies"
+    ],
+    totalXp: 2600
   }
 ];
 
 const BrowseCareers = () => {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedIndustry, setSelectedIndustry] = useState('');
 
   const industries = ["All", "Technology", "Design", "Marketing", "Business", "Healthcare", "Finance"];
 
   const filteredCareers = careers.filter(career => {
-    const matchesSearch = career.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    const matchesSearch = career.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          career.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          career.skills.some(skill => skill.toLowerCase().includes(searchTerm.toLowerCase()));
-    const matchesIndustry = selectedIndustry === '' || selectedIndustry === 'All' || career.industry === selectedIndustry;
+    
+    // Map career types to industries for filtering
+    const getIndustry = (name: string) => {
+      if (name.includes('Engineer') || name.includes('Data') || name.includes('Cybersecurity')) return 'Technology';
+      if (name.includes('Designer')) return 'Design';
+      if (name.includes('Marketing')) return 'Marketing';
+      if (name.includes('Manager')) return 'Business';
+      return 'Technology';
+    };
+    
+    const matchesIndustry = selectedIndustry === '' || selectedIndustry === 'All' || getIndustry(career.name) === selectedIndustry;
     return matchesSearch && matchesIndustry;
   });
+
+  const handleStartCareerPath = (career: CareerRecommendation) => {
+    navigate(`/career/${career.id}`);
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-background via-background to-muted/10">
@@ -160,12 +219,11 @@ const BrowseCareers = () => {
               </div>
             </div>
 
-            {/* Enhanced Career Cards Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
               {filteredCareers.map((career, index) => (
                 <Card 
                   key={career.id} 
-                  className="group hover:shadow-2xl transition-all duration-500 cursor-pointer border-2 hover:border-secondary/50 hover:-translate-y-2 bg-card/80 backdrop-blur-sm relative overflow-hidden"
+                  className="group hover:shadow-2xl transition-all duration-500 border-2 hover:border-secondary/50 hover:-translate-y-2 bg-card/80 backdrop-blur-sm relative overflow-hidden"
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
                   {/* Decorative Elements */}
@@ -174,15 +232,31 @@ const BrowseCareers = () => {
                   <CardHeader className="relative z-10">
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex-1">
-                        <CardTitle className="text-xl mb-3 group-hover:text-secondary transition-colors duration-300">
-                          {career.title}
-                        </CardTitle>
-                        <Badge variant="secondary" className="bg-secondary/10 text-secondary border-secondary/20">
-                          {career.industry}
-                        </Badge>
+                        <div className="flex items-center gap-3 mb-3">
+                          <CardTitle className="text-xl group-hover:text-secondary transition-colors duration-300">
+                            {career.name}
+                          </CardTitle>
+                          <Badge variant="secondary" className="bg-secondary/10 text-secondary border-secondary/20">
+                            {career.matchPercentage}% Match
+                          </Badge>
+                        </div>
+                        <div className="flex items-center gap-2 mb-3">
+                          <Badge variant="outline" className={`text-xs ${
+                            career.difficulty === 'Beginner-Friendly' ? 'border-green-500/30 text-green-600 bg-green-50/50' :
+                            career.difficulty === 'Intermediate' ? 'border-yellow-500/30 text-yellow-600 bg-yellow-50/50' :
+                            'border-red-500/30 text-red-600 bg-red-50/50'
+                          }`}>
+                            {career.difficulty}
+                          </Badge>
+                          {career.totalXp && (
+                            <Badge variant="outline" className="text-xs border-primary/20 text-primary bg-primary/5">
+                              {career.totalXp} XP
+                            </Badge>
+                          )}
+                        </div>
                       </div>
-                      <div className="w-12 h-12 bg-secondary/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                        <Briefcase className="h-6 w-6 text-secondary" />
+                      <div className="w-12 h-12 bg-gradient-to-r from-secondary/10 to-primary/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 border border-secondary/20">
+                        <Rocket className="h-6 w-6 text-secondary" />
                       </div>
                     </div>
                     <CardDescription className="text-sm leading-relaxed">
@@ -195,15 +269,11 @@ const BrowseCareers = () => {
                     <div className="grid grid-cols-1 gap-4">
                       <div className="flex items-center text-sm bg-muted/50 p-3 rounded-lg">
                         <DollarSign className="h-5 w-5 mr-3 text-success" />
-                        <span className="font-semibold">{career.salaryRange}</span>
+                        <span className="font-semibold">{career.averageSalary}</span>
                       </div>
                       <div className="flex items-center text-sm bg-muted/50 p-3 rounded-lg">
                         <TrendingUp className="h-5 w-5 mr-3 text-success" />
-                        <span className="font-medium">{career.growth} growth rate</span>
-                      </div>
-                      <div className="flex items-center text-sm bg-muted/50 p-3 rounded-lg">
-                        <Clock className="h-5 w-5 mr-3 text-muted-foreground" />
-                        <span className="font-medium">{career.timeToLearn} to learn</span>
+                        <span className="font-medium">{career.jobGrowth} growth rate</span>
                       </div>
                     </div>
 
@@ -224,15 +294,31 @@ const BrowseCareers = () => {
                       </div>
                     </div>
 
+                    {/* Roadmap Preview */}
+                    <div>
+                      <h4 className="font-semibold text-sm mb-3 text-foreground">Learning Path:</h4>
+                      <ul className="text-xs text-muted-foreground space-y-1">
+                        {career.roadmap.slice(0, 2).map((step, stepIndex) => (
+                          <li key={stepIndex} className="flex items-center">
+                            <div className="w-1.5 h-1.5 bg-primary rounded-full mr-2 flex-shrink-0"></div>
+                            {step}
+                          </li>
+                        ))}
+                        {career.roadmap.length > 2 && (
+                          <li className="text-primary font-medium">
+                            + {career.roadmap.length - 2} more steps...
+                          </li>
+                        )}
+                      </ul>
+                    </div>
+
                     {/* Enhanced Action Button */}
                     <Button 
-                      className="w-full h-12 mt-6 bg-gradient-to-r from-secondary to-secondary/90 hover:from-secondary/90 hover:to-secondary/80 group-hover:scale-105 transition-all duration-300 shadow-lg" 
-                      onClick={() => {
-                        console.log('Selected career:', career.title);
-                      }}
+                      className="w-full h-12 mt-6 bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 group-hover:scale-105 transition-all duration-300 shadow-lg" 
+                      onClick={() => handleStartCareerPath(career)}
                     >
-                      Learn More
-                      <Search className="ml-2 h-4 w-4" />
+                      <ArrowRight className="w-4 h-4 mr-2" />
+                      Start Career Path
                     </Button>
                   </CardContent>
                 </Card>
