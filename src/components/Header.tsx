@@ -9,18 +9,24 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Home, BrainCircuit, Target, Search, User, LogOut, Menu, X } from 'lucide-react';
+import { useCareer } from '@/contexts/CareerContext';
+import { Home, BrainCircuit, Target, Search, User, LogOut, Menu, X, BarChart3 } from 'lucide-react';
 
 export const Header = () => {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { hasStartedCareer } = useCareer();
 
-  const navigation = [
-    { name: 'Home', href: '/home', icon: Home },
-    { name: 'Take Quiz', href: '/quiz', icon: BrainCircuit },
-    { name: 'Recommendations', href: '/recommendations', icon: Target },
-    { name: 'Browse Careers', href: '/browse-careers', icon: Search },
-  ];
+  const navigation = hasStartedCareer 
+    ? [
+        { name: 'Dashboard', href: '/dashboard', icon: BarChart3 },
+      ]
+    : [
+        { name: 'Home', href: '/home', icon: Home },
+        { name: 'Take Quiz', href: '/quiz', icon: BrainCircuit },
+        { name: 'Recommendations', href: '/recommendations', icon: Target },
+        { name: 'Browse Careers', href: '/browse-careers', icon: Search },
+      ];
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -29,7 +35,7 @@ export const Header = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link to="/home" className="flex items-center space-x-2">
+          <Link to={hasStartedCareer ? "/dashboard" : "/home"} className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-gradient-to-r from-primary to-secondary rounded-lg flex items-center justify-center">
               <BrainCircuit className="w-5 h-5 text-white" />
             </div>
@@ -81,10 +87,14 @@ export const Header = () => {
                     <span>Profile</span>
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Target className="mr-2 h-4 w-4" />
-                  <span>Dashboard</span>
-                </DropdownMenuItem>
+                {hasStartedCareer && (
+                  <DropdownMenuItem asChild>
+                    <Link to="/dashboard" className="flex items-center w-full">
+                      <BarChart3 className="mr-2 h-4 w-4" />
+                      <span>Dashboard</span>
+                    </Link>
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="text-destructive focus:text-destructive">
                   <LogOut className="mr-2 h-4 w-4" />
