@@ -38,19 +38,24 @@ const CareerRoadmap = () => {
     const fetchCareerDetails = async () => {
       try {
         setIsLoading(true);
+        console.log('Looking for career with ID:', careerId);
+        
         // In a real app, this would fetch specific career details
         const recommendations = await recommendationsApi.getRecommendations();
+        console.log('Available careers:', recommendations.map(c => ({ id: c.id, name: c.name })));
+        
         const foundCareer = recommendations.find(c => c.id === careerId);
+        console.log('Found career:', foundCareer);
         
         if (foundCareer) {
           // Add detailed roadmap data (in real app, this would come from API)
           const detailedCareer: CareerRecommendation = {
             ...foundCareer,
-            totalXp: 2500,
-            difficulty: 'Intermediate',
             detailedRoadmap: generateDetailedRoadmap(foundCareer.name)
           };
           setCareer(detailedCareer);
+        } else {
+          console.error('Career not found for ID:', careerId);
         }
       } catch (error) {
         console.error('Failed to load career details:', error);

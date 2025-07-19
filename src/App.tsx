@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import Quiz from "./pages/Quiz";
 import Recommendations from "./pages/Recommendations";
 import CareerRoadmap from "./pages/CareerRoadmap";
+import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import { QuizProvider } from "./contexts/QuizContext";
 import Login from "./pages/Login";
@@ -30,6 +31,7 @@ const App = () => (
             <Route path="/recommendations" element={<Recommendations />} />
             <Route path="/career/:careerId" element={<CareerRoadmap />} />
             <Route path="/browse-careers" element={<BrowseCareers />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="/signup" element={<Signup />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
