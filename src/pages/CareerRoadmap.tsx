@@ -38,37 +38,27 @@ const CareerRoadmap = () => {
     const fetchCareerDetails = async () => {
       try {
         setIsLoading(true);
-        console.log('Looking for career with ID:', careerId);
-        
-        // In a real app, this would fetch specific career details
-        const recommendations = await recommendationsApi.getRecommendations();
-        console.log('Available careers:', recommendations.map(c => ({ id: c.id, name: c.name })));
-        
-        const foundCareer = recommendations.find(c => c.id === careerId);
-        console.log('Found career:', foundCareer);
-        
+        if (!careerId) return;
+        const foundCareer = await recommendationsApi.getCareerById(careerId);
         if (foundCareer) {
-          // Add detailed roadmap data (in real app, this would come from API)
-          const detailedCareer: CareerRecommendation = {
-            ...foundCareer,
-            detailedRoadmap: generateDetailedRoadmap(foundCareer.name)
-          };
-          setCareer(detailedCareer);
+          setCareer(foundCareer);
         } else {
-          console.error('Career not found for ID:', careerId);
+          toast({
+            title: 'Error',
+            description: 'Career not found.',
+            variant: 'destructive',
+          });
         }
       } catch (error) {
-        console.error('Failed to load career details:', error);
         toast({
-          title: "Error",
-          description: "Failed to load career details.",
-          variant: "destructive",
+          title: 'Error',
+          description: 'Failed to load career details.',
+          variant: 'destructive',
         });
       } finally {
         setIsLoading(false);
       }
     };
-
     if (careerId) {
       fetchCareerDetails();
     }

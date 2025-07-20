@@ -5,21 +5,45 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Eye, EyeOff, User, Lock } from 'lucide-react';
+import { authApi } from '@/services/authApi';
+import { useToast } from '@/hooks/use-toast';
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Logging in with:', formData);
-    // For now, navigate to home page after login
-    navigate('/home');
+    setLoading(true);
+    try {
+      const res = await authApi.login(formData.email, formData.password);
+      toast({
+        title: 'Login Successful',
+        description: `Welcome back, ${res.data.user.name}!`,
+      });
+      if (res.data.user.role === 'mentor') {
+        navigate('/mentor-dashboard');
+      } else if (res.data.user.hasStartedCareer) {
+        navigate('/dashboard');
+      } else {
+        navigate('/');
+      }
+    } catch (error: any) {
+      toast({
+        title: 'Login Failed',
+        description: error.message || 'Invalid email or password',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -49,6 +73,7 @@ const Login = () => {
                   value={formData.email}
                   onChange={handleChange}
                   className="h-11"
+                  disabled={loading}
                 />
               </div>
 
@@ -64,6 +89,7 @@ const Login = () => {
                     value={formData.password}
                     onChange={handleChange}
                     className="h-11 pr-10"
+                    disabled={loading}
                   />
                   <Button
                     type="button"
@@ -71,6 +97,7 @@ const Login = () => {
                     size="sm"
                     className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                     onClick={() => setShowPassword(!showPassword)}
+                    tabIndex={-1}
                   >
                     {showPassword ? (
                       <EyeOff className="h-4 w-4 text-muted-foreground" />
@@ -83,7 +110,7 @@ const Login = () => {
 
               <div className="flex items-center justify-between text-sm">
                 <label className="flex items-center space-x-2 cursor-pointer">
-                  <input type="checkbox" className="rounded border-gray-300" />
+                  <input type="checkbox" className="rounded border-gray-300" disabled={loading} />
                   <span className="text-muted-foreground">Remember me</span>
                 </label>
                 <Link to="#" className="text-primary hover:underline">
@@ -97,9 +124,10 @@ const Login = () => {
                 type="submit" 
                 className="w-full h-11 text-base font-medium"
                 variant="default"
+                disabled={loading}
               >
                 <Lock className="w-4 h-4 mr-2" />
-                Sign In as Student
+                {loading ? 'Signing In...' : 'Sign In as Student'}
               </Button>
 
               <Button 
@@ -107,6 +135,7 @@ const Login = () => {
                 className="w-full h-11 text-base font-medium"
                 variant="outline"
                 onClick={() => navigate('/mentor-dashboard')}
+                disabled={loading}
               >
                 <User className="w-4 h-4 mr-2" />
                 Sign In as Mentor

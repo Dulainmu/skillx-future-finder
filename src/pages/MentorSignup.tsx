@@ -8,7 +8,7 @@ import { Eye, EyeOff, UserPlus, Lock, Mail, User } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { authApi } from '@/services/authApi';
 
-const Signup = () => {
+const MentorSignup = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -37,9 +37,10 @@ const Signup = () => {
     }
     setLoading(true);
     try {
-      const res = await authApi.register(formData.name, formData.email, formData.password);
+      // Register as mentor
+      const res = await authApi.register(formData.name, formData.email, formData.password, 'mentor');
       toast({
-        title: "Account Created!",
+        title: "Mentor Account Created!",
         description: `Welcome, ${res.data.user.name}! Redirecting to login...`,
       });
       setTimeout(() => navigate('/'), 2000);
@@ -62,9 +63,9 @@ const Signup = () => {
             <div className="mx-auto w-16 h-16 bg-success/10 rounded-full flex items-center justify-center mb-4">
               <UserPlus className="w-8 h-8 text-success" />
             </div>
-            <CardTitle className="text-3xl font-bold text-primary">Join SkillX</CardTitle>
+            <CardTitle className="text-3xl font-bold text-primary">Join as Mentor</CardTitle>
             <CardDescription className="text-muted-foreground">
-              Create your account and start discovering your ideal career path
+              Create your mentor account and start guiding students on their career journey
             </CardDescription>
           </CardHeader>
           
@@ -183,18 +184,7 @@ const Signup = () => {
                 disabled={loading}
               >
                 <UserPlus className="w-4 h-4 mr-2" />
-                {loading ? 'Creating Account...' : 'Create Account'}
-              </Button>
-
-              <Button
-                type="button"
-                className="w-full h-11 text-base font-medium"
-                variant="outline"
-                onClick={() => navigate('/mentor-signup')}
-                disabled={loading}
-              >
-                <UserPlus className="w-4 h-4 mr-2" />
-                Sign Up as Mentor
+                {loading ? 'Creating Account...' : 'Create Mentor Account'}
               </Button>
 
               <div className="text-center text-sm text-muted-foreground">
@@ -220,4 +210,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default MentorSignup; 
