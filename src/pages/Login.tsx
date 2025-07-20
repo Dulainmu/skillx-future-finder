@@ -5,35 +5,35 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Eye, EyeOff, User, Lock } from 'lucide-react';
-import { authApi } from '@/services/authApi';
+import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isMentorLogin, setIsMentorLogin] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
   const { toast } = useToast();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent, loginType: 'student' | 'mentor' = 'student') => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await authApi.login(formData.email, formData.password);
+      await login(formData.email, formData.password);
       toast({
         title: 'Login Successful',
-        description: `Welcome back, ${res.data.user.name}!`,
+        description: 'Welcome back!',
       });
-      if (res.data.user.role === 'mentor') {
+      if (loginType === 'mentor') {
         navigate('/mentor-dashboard');
-      } else if (res.data.user.hasStartedCareer) {
-        navigate('/dashboard');
       } else {
-        navigate('/');
+        navigate('/dashboard');
       }
     } catch (error: any) {
       toast({
@@ -125,6 +125,7 @@ const Login = () => {
                 className="w-full h-11 text-base font-medium"
                 variant="default"
                 disabled={loading}
+                onClick={(e) => handleSubmit(e, 'student')}
               >
                 <Lock className="w-4 h-4 mr-2" />
                 {loading ? 'Signing In...' : 'Sign In as Student'}
@@ -134,7 +135,7 @@ const Login = () => {
                 type="button" 
                 className="w-full h-11 text-base font-medium"
                 variant="outline"
-                onClick={() => navigate('/mentor-dashboard')}
+                onClick={(e) => handleSubmit(e, 'mentor')}
                 disabled={loading}
               >
                 <User className="w-4 h-4 mr-2" />

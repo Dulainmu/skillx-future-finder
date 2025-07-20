@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useAuth } from './AuthContext';
+import { careersApi } from '@/services/careersApi';
 
 interface CareerContextType {
   hasStartedCareer: boolean;
@@ -18,17 +20,33 @@ export const useCareer = () => {
 };
 
 export const CareerProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [hasStartedCareer, setHasStartedCareer] = useState(false);
-  const [currentCareer, setCurrentCareer] = useState<string | null>(null);
+  const { user, updateUser } = useAuth();
+  const [hasStartedCareer, setHasStartedCareer] = useState(user?.hasStartedCareer || false);
+  const [currentCareer, setCurrentCareer] = useState<string | null>(user?.currentCareer || null);
 
-  const startCareer = (careerId: string) => {
-    setHasStartedCareer(true);
-    setCurrentCareer(careerId);
+  useEffect(() => {
+    if (user) {
+      setHasStartedCareer(user.hasStartedCareer || false);
+      setCurrentCareer(user.currentCareer || null);
+    }
+  }, [user]);
+
+  const startCareer = async (careerId: string) => {
+    try {
+      await careersApi.startCareer(careerId);
+      setHasStartedCareer(true);
+      setCurrentCareer(careerId);
+      updateUser({ hasStartedCareer: true, currentCareer: careerId });
+    } catch (error) {
+      console.error('Failed to start career:', error);
+      throw error;
+    }
   };
 
   const resetCareer = () => {
     setHasStartedCareer(false);
     setCurrentCareer(null);
+    updateUser({ hasStartedCareer: false, currentCareer: null });
   };
 
   return (

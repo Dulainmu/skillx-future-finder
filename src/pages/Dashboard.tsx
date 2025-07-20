@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useCareer } from '@/contexts/CareerContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import ProjectSubmission from '@/components/ProjectSubmission';
 import { 
@@ -27,7 +28,6 @@ import {
   ExternalLink,
   Users
 } from 'lucide-react';
-import { authApi } from '@/services/authApi';
 
 interface Course {
   id: string;
@@ -69,36 +69,20 @@ interface Project {
 const Dashboard = () => {
   const navigate = useNavigate();
   const { hasStartedCareer, currentCareer, resetCareer } = useCareer();
+  const { user, isLoading } = useAuth();
   const { toast } = useToast();
-  const [user, setUser] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const [totalXp, setTotalXp] = useState(1250);
   const [level, setLevel] = useState(3);
   const [learningModules, setLearningModules] = useState<LearningModule[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
 
   useEffect(() => {
+    if (!user) return;
+    
     if (!hasStartedCareer) {
       navigate('/');
       return;
     }
-
-    const fetchUser = async () => {
-      setIsLoading(true);
-      try {
-        const res = await authApi.getCurrentUser();
-        setUser(res.data.user);
-      } catch (err: any) {
-        toast({
-          title: 'Error',
-          description: err.message || 'Failed to load user profile.',
-          variant: 'destructive',
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchUser();
 
     // Initialize learning modules and projects
     setLearningModules([
@@ -234,7 +218,7 @@ const Dashboard = () => {
         ]
       }
     ]);
-  }, [hasStartedCareer, navigate, toast]);
+  }, [hasStartedCareer, navigate, user]);
 
   if (isLoading) return <div className="text-center mt-8">Loading...</div>;
   if (!user) return <div className="text-center mt-8">User not found.</div>;
