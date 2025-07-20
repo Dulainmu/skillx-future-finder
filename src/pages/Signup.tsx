@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Eye, EyeOff, UserPlus, Lock, Mail, User } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { authApi } from '@/services/authApi';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -19,6 +19,7 @@ const Signup = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { register } = useAuth();
   const { toast } = useToast();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,12 +38,12 @@ const Signup = () => {
     }
     setLoading(true);
     try {
-      const res = await authApi.register(formData.name, formData.email, formData.password);
+      await register(formData.name, formData.email, formData.password);
       toast({
         title: "Account Created!",
-        description: `Welcome, ${res.data.user.name}! Redirecting to login...`,
+        description: `Welcome! Redirecting to dashboard...`,
       });
-      setTimeout(() => navigate('/'), 2000);
+      navigate('/');
     } catch (error: any) {
       toast({
         title: "Signup Failed",

@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -14,68 +13,79 @@ import MentorDashboard from "./pages/MentorDashboard";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import { QuizProvider } from "./contexts/QuizContext";
+import { useAuth } from "./contexts/AuthContext";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import MentorSignup from "./pages/MentorSignup";
 import BrowseCareers from "./pages/BrowseCareers";
-import { authApi } from './services/authApi';
 
 const queryClient = new QueryClient();
 
-function App() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<any>(null);
+function AppRoutes() {
+  const { user, isLoading } = useAuth();
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      setIsLoading(true);
-      try {
-        const res = await authApi.getCurrentUser();
-        setUser(res.data.user);
-        setIsAuthenticated(true);
-      } catch {
-        setUser(null);
-        setIsAuthenticated(false);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    checkAuth();
-  }, []);
-
-  if (isLoading) return <div className="text-center mt-8">Loading...</div>;
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/mentor-signup" element={<MentorSignup />} />
-        <Route path="/index" element={<Navigate to="/" replace />} />
-        {isAuthenticated ? (
-          <>
-            {user?.role === 'mentor' ? (
-              <Route path="/" element={<Navigate to="/mentor-dashboard" replace />} />
-            ) : user?.hasStartedCareer ? (
-              <Route path="/" element={<Dashboard />} />
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <QuizProvider>
+          <Routes>
+            <Route path="/login" element={user ? <Navigate to="/" replace /> : <Login />} />
+            <Route path="/signup" element={user ? <Navigate to="/" replace /> : <Signup />} />
+            <Route path="/mentor-signup" element={user ? <Navigate to="/" replace /> : <MentorSignup />} />
+            <Route path="/index" element={<Navigate to="/" replace />} />
+            
+            {user ? (
+              <>
+                {user.role === 'mentor' ? (
+                  <>
+                    <Route path="/" element={<MentorDashboard />} />
+                    <Route path="/mentor-dashboard" element={<MentorDashboard />} />
+                  </>
+                ) : user.hasStartedCareer ? (
+                  <>
+                    <Route path="/" element={<Dashboard />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
+                  </>
+                ) : (
+                  <Route path="/" element={<Index />} />
+                )}
+                
+                <Route path="/quiz" element={<Quiz />} />
+                <Route path="/recommendations" element={<Recommendations />} />
+                <Route path="/career/:careerId" element={<CareerStart />} />
+                <Route path="/career-roadmap/:careerId" element={<CareerRoadmap />} />
+                <Route path="/browse-careers" element={<BrowseCareers />} />
+                <Route path="/profile" element={<Profile />} />
+              </>
             ) : (
-              <Route path="/" element={<Index />} />
+              <Route path="/" element={<Login />} />
             )}
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/mentor-dashboard" element={<MentorDashboard />} />
-            <Route path="/quiz" element={<Quiz />} />
-            <Route path="/recommendations" element={<Recommendations />} />
-            <Route path="/career/:careerId" element={<CareerStart />} />
-            <Route path="/career-roadmap/:careerId" element={<CareerRoadmap />} />
-            <Route path="/browse-careers" element={<BrowseCareers />} />
-            <Route path="/profile" element={<Profile />} />
-          </>
-        ) : (
-          <Route path="/" element={<Login />} />
-        )}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+            
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          <Toaster />
+          <Sonner />
+        </QuizProvider>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppRoutes />
     </BrowserRouter>
   );
 }
