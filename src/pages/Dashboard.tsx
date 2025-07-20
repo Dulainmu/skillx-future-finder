@@ -9,6 +9,7 @@ import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useCareer } from '@/contexts/CareerContext';
 import { useToast } from '@/hooks/use-toast';
+import ProjectSubmission from '@/components/ProjectSubmission';
 import { 
   BookOpen, 
   Trophy, 
@@ -20,8 +21,20 @@ import {
   Award,
   TrendingUp,
   Calendar,
-  Zap
+  Zap,
+  Video,
+  FileText,
+  ExternalLink,
+  Users
 } from 'lucide-react';
+
+interface Course {
+  id: string;
+  title: string;
+  type: 'video' | 'article' | 'quiz' | 'hands-on';
+  duration: string;
+  completed: boolean;
+}
 
 interface LearningModule {
   id: string;
@@ -32,6 +45,8 @@ interface LearningModule {
   completed: boolean;
   progress: number;
   xpReward: number;
+  courses: Course[];
+  skillsLearned: string[];
 }
 
 interface Project {
@@ -39,11 +54,15 @@ interface Project {
   title: string;
   description: string;
   difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
-  status: 'not-started' | 'in-progress' | 'completed';
+  status: 'not-started' | 'in-progress' | 'completed' | 'submitted' | 'approved';
   progress: number;
   estimatedTime: string;
   xpReward: number;
   skills: string[];
+  brief?: string;
+  requirements?: string[];
+  deliverables?: string[];
+  submission?: any;
 }
 
 const Dashboard = () => {
@@ -71,7 +90,14 @@ const Dashboard = () => {
         difficulty: 'Beginner',
         completed: true,
         progress: 100,
-        xpReward: 200
+        xpReward: 200,
+        skillsLearned: ['Variables & Data Types', 'Functions', 'Control Flow', 'Error Handling'],
+        courses: [
+          { id: '1-1', title: 'Introduction to Python', type: 'video', duration: '30 min', completed: true },
+          { id: '1-2', title: 'Variables and Data Types', type: 'hands-on', duration: '45 min', completed: true },
+          { id: '1-3', title: 'Functions Deep Dive', type: 'video', duration: '40 min', completed: true },
+          { id: '1-4', title: 'Python Basics Quiz', type: 'quiz', duration: '15 min', completed: true }
+        ]
       },
       {
         id: '2',
@@ -81,7 +107,15 @@ const Dashboard = () => {
         difficulty: 'Intermediate',
         completed: false,
         progress: 65,
-        xpReward: 300
+        xpReward: 300,
+        skillsLearned: ['DataFrames', 'Data Cleaning', 'Aggregation', 'Visualization'],
+        courses: [
+          { id: '2-1', title: 'Introduction to Pandas', type: 'video', duration: '35 min', completed: true },
+          { id: '2-2', title: 'Working with DataFrames', type: 'hands-on', duration: '50 min', completed: true },
+          { id: '2-3', title: 'Data Cleaning Techniques', type: 'article', duration: '25 min', completed: true },
+          { id: '2-4', title: 'Advanced Data Manipulation', type: 'hands-on', duration: '60 min', completed: false },
+          { id: '2-5', title: 'Pandas Mastery Quiz', type: 'quiz', duration: '20 min', completed: false }
+        ]
       },
       {
         id: '3',
@@ -91,7 +125,15 @@ const Dashboard = () => {
         difficulty: 'Intermediate',
         completed: false,
         progress: 0,
-        xpReward: 400
+        xpReward: 400,
+        skillsLearned: ['Supervised Learning', 'Model Evaluation', 'Feature Engineering', 'Cross-validation'],
+        courses: [
+          { id: '3-1', title: 'ML Fundamentals', type: 'video', duration: '45 min', completed: false },
+          { id: '3-2', title: 'Scikit-learn Basics', type: 'hands-on', duration: '60 min', completed: false },
+          { id: '3-3', title: 'Model Training & Evaluation', type: 'hands-on', duration: '75 min', completed: false },
+          { id: '3-4', title: 'Feature Engineering Guide', type: 'article', duration: '30 min', completed: false },
+          { id: '3-5', title: 'ML Concepts Quiz', type: 'quiz', duration: '25 min', completed: false }
+        ]
       }
     ]);
 
@@ -101,11 +143,25 @@ const Dashboard = () => {
         title: 'Customer Segmentation Analysis',
         description: 'Use clustering algorithms to segment customers based on purchasing behavior',
         difficulty: 'Intermediate',
-        status: 'completed',
+        status: 'approved',
         progress: 100,
         estimatedTime: '1 week',
         xpReward: 500,
-        skills: ['Python', 'Pandas', 'K-means', 'Data Visualization']
+        skills: ['Python', 'Pandas', 'K-means', 'Data Visualization'],
+        brief: 'In this project, you will analyze customer data to identify distinct customer segments using unsupervised learning techniques. This is a fundamental skill in marketing analytics and customer relationship management.',
+        requirements: [
+          'Load and explore the customer dataset',
+          'Perform data preprocessing and cleaning',
+          'Apply K-means clustering algorithm',
+          'Visualize customer segments',
+          'Interpret and document findings'
+        ],
+        deliverables: [
+          'Python notebook with complete analysis',
+          'Customer segmentation visualizations',
+          'Business insights and recommendations',
+          'Code documentation and README'
+        ]
       },
       {
         id: '2',
@@ -116,7 +172,21 @@ const Dashboard = () => {
         progress: 40,
         estimatedTime: '2 weeks',
         xpReward: 750,
-        skills: ['Python', 'Scikit-learn', 'Linear Regression', 'Feature Engineering']
+        skills: ['Python', 'Scikit-learn', 'Linear Regression', 'Feature Engineering'],
+        brief: 'Develop a predictive model to forecast sales based on historical data and various business factors. This project will teach you the complete machine learning pipeline from data preparation to model deployment.',
+        requirements: [
+          'Analyze historical sales data',
+          'Create relevant features from raw data',
+          'Train and validate multiple models',
+          'Evaluate model performance',
+          'Create predictions for future periods'
+        ],
+        deliverables: [
+          'Complete ML pipeline code',
+          'Model performance analysis',
+          'Feature importance analysis',
+          'Sales predictions with confidence intervals'
+        ]
       },
       {
         id: '3',
@@ -127,7 +197,21 @@ const Dashboard = () => {
         progress: 0,
         estimatedTime: '3 weeks',
         xpReward: 1000,
-        skills: ['Python', 'Streamlit', 'APIs', 'Real-time Processing']
+        skills: ['Python', 'Streamlit', 'APIs', 'Real-time Processing'],
+        brief: 'Build a comprehensive dashboard that displays real-time data from multiple sources. This project combines data engineering, web development, and visualization skills.',
+        requirements: [
+          'Set up real-time data sources',
+          'Design responsive dashboard layout',
+          'Implement data refresh mechanisms',
+          'Add interactive filtering and controls',
+          'Deploy dashboard to cloud platform'
+        ],
+        deliverables: [
+          'Complete dashboard application',
+          'Data pipeline documentation',
+          'User interface mockups',
+          'Deployment guide and live demo'
+        ]
       }
     ]);
   }, [hasStartedCareer, navigate]);
@@ -174,6 +258,44 @@ const Dashboard = () => {
     }
   };
 
+  const handleProjectSubmission = (projectId: string, submission: any) => {
+    setProjects(prev => prev.map(project => 
+      project.id === projectId 
+        ? { ...project, status: 'submitted', submission, progress: 100 }
+        : project
+    ));
+
+    toast({
+      title: "🎯 Project Submitted!",
+      description: "Your project has been sent to mentors for review.",
+    });
+  };
+
+  const completeCourse = (moduleId: string, courseId: string) => {
+    setLearningModules(prev => prev.map(module => {
+      if (module.id === moduleId) {
+        const updatedCourses = module.courses.map(course => 
+          course.id === courseId ? { ...course, completed: true } : course
+        );
+        const completedCount = updatedCourses.filter(c => c.completed).length;
+        const newProgress = Math.round((completedCount / updatedCourses.length) * 100);
+        
+        return {
+          ...module,
+          courses: updatedCourses,
+          progress: newProgress,
+          completed: newProgress === 100
+        };
+      }
+      return module;
+    }));
+
+    toast({
+      title: "📚 Course Completed!",
+      description: "Great job! Keep up the momentum.",
+    });
+  };
+
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
       case 'Beginner': return 'secondary';
@@ -186,9 +308,21 @@ const Dashboard = () => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'completed': return 'text-green-600';
+      case 'approved': return 'text-green-600';
+      case 'submitted': return 'text-blue-600';
       case 'in-progress': return 'text-yellow-600';
       case 'not-started': return 'text-muted-foreground';
       default: return 'text-muted-foreground';
+    }
+  };
+
+  const getCourseIcon = (type: string) => {
+    switch (type) {
+      case 'video': return Video;
+      case 'article': return FileText;
+      case 'quiz': return Target;
+      case 'hands-on': return PlayCircle;
+      default: return BookOpen;
     }
   };
 
@@ -256,8 +390,8 @@ const Dashboard = () => {
 
             {/* Learning Modules Tab */}
             <TabsContent value="learning">
-              <div className="space-y-4">
-                <h2 className="text-xl font-semibold text-foreground mb-4">Learning Modules</h2>
+              <div className="space-y-6">
+                <h2 className="text-xl font-semibold text-foreground mb-4">Skill Development</h2>
                 {learningModules.map((module) => (
                   <Card key={module.id} className="bg-card/80 backdrop-blur-sm border border-border/50">
                     <CardHeader>
@@ -284,7 +418,7 @@ const Dashboard = () => {
                         </div>
                       </div>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="space-y-4">
                       <div className="flex items-center justify-between mb-3">
                         <span className="text-sm text-muted-foreground flex items-center gap-1">
                           <Clock className="w-4 h-4" />
@@ -292,15 +426,78 @@ const Dashboard = () => {
                         </span>
                         <span className="text-sm text-muted-foreground">{module.progress}%</span>
                       </div>
-                      <Progress value={module.progress} className="h-2 mb-3" />
+                      <Progress value={module.progress} className="h-3 mb-4" />
+
+                      {/* Skills Learned */}
+                      <div className="mb-4">
+                        <h4 className="text-sm font-medium mb-2">Skills You'll Master</h4>
+                        <div className="flex flex-wrap gap-1">
+                          {module.skillsLearned.map((skill, index) => (
+                            <Badge key={index} variant="secondary" className="text-xs">
+                              {skill}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Course List */}
+                      <div className="space-y-2">
+                        <h4 className="text-sm font-medium">Courses</h4>
+                        <div className="space-y-2">
+                          {module.courses.map((course) => {
+                            const CourseIcon = getCourseIcon(course.type);
+                            return (
+                              <div 
+                                key={course.id} 
+                                className="flex items-center justify-between p-3 bg-muted/20 rounded-lg"
+                              >
+                                <div className="flex items-center gap-3">
+                                  <CourseIcon className={`w-4 h-4 ${course.completed ? 'text-green-600' : 'text-primary'}`} />
+                                  <div>
+                                    <div className={`text-sm font-medium ${course.completed ? 'line-through text-muted-foreground' : ''}`}>
+                                      {course.title}
+                                    </div>
+                                    <div className="text-xs text-muted-foreground flex items-center gap-2">
+                                      <span>{course.duration}</span>
+                                      <Badge variant="outline" className="text-xs capitalize">
+                                        {course.type}
+                                      </Badge>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  {course.completed ? (
+                                    <CheckCircle2 className="w-4 h-4 text-green-600" />
+                                  ) : (
+                                    <Button 
+                                      size="sm" 
+                                      variant="outline"
+                                      onClick={() => completeCourse(module.id, course.id)}
+                                    >
+                                      Start
+                                    </Button>
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+
                       {!module.completed && (
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          onClick={() => updateModuleProgress(module.id, Math.min(100, module.progress + 25))}
-                        >
-                          Continue Learning
-                        </Button>
+                        <div className="flex gap-2 pt-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => updateModuleProgress(module.id, Math.min(100, module.progress + 25))}
+                          >
+                            Continue Learning
+                          </Button>
+                          <Button variant="ghost" size="sm">
+                            <ExternalLink className="w-4 h-4 mr-1" />
+                            View All Courses
+                          </Button>
+                        </div>
                       )}
                     </CardContent>
                   </Card>
@@ -358,6 +555,10 @@ const Dashboard = () => {
                       </div>
 
                       <div className="flex gap-2">
+                        <ProjectSubmission 
+                          project={project} 
+                          onSubmit={handleProjectSubmission}
+                        />
                         {project.status === 'not-started' && (
                           <Button 
                             size="sm"
@@ -369,6 +570,7 @@ const Dashboard = () => {
                         {project.status === 'in-progress' && (
                           <Button 
                             size="sm"
+                            variant="outline"
                             onClick={() => updateProjectStatus(project.id, 'completed')}
                           >
                             Mark Complete
@@ -378,6 +580,18 @@ const Dashboard = () => {
                           <Badge variant="default" className="bg-green-600">
                             <CheckCircle2 className="w-3 h-3 mr-1" />
                             Completed
+                          </Badge>
+                        )}
+                        {project.status === 'submitted' && (
+                          <Badge variant="default" className="bg-blue-600">
+                            <Clock className="w-3 h-3 mr-1" />
+                            Under Review
+                          </Badge>
+                        )}
+                        {project.status === 'approved' && (
+                          <Badge variant="default" className="bg-green-600">
+                            <Award className="w-3 h-3 mr-1" />
+                            Approved
                           </Badge>
                         )}
                       </div>

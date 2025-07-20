@@ -99,7 +99,17 @@ const Login = () => {
                 variant="default"
               >
                 <Lock className="w-4 h-4 mr-2" />
-                Sign In
+                Sign In as Student
+              </Button>
+
+              <Button 
+                type="button" 
+                className="w-full h-11 text-base font-medium"
+                variant="outline"
+                onClick={() => navigate('/mentor-dashboard')}
+              >
+                <User className="w-4 h-4 mr-2" />
+                Sign In as Mentor
               </Button>
 
               <div className="text-center text-sm text-muted-foreground">
