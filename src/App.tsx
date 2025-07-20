@@ -13,7 +13,7 @@ import MentorDashboard from "./pages/MentorDashboard";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import { QuizProvider } from "./contexts/QuizContext";
-import { useAuth } from "./contexts/AuthContext";
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import MentorSignup from "./pages/MentorSignup";
@@ -85,7 +85,9 @@ function AppRoutes() {
 function App() {
   return (
     <BrowserRouter>
-      <AppRoutes />
+      <AuthProvider>
+        <AppRoutes />
+      </AuthProvider>
     </BrowserRouter>
   );
 }

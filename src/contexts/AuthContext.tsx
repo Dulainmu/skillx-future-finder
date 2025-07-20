@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { authApi } from '@/services/authApi';
+import { supabase } from '@/integrations/supabase/client';
+import type { User as SupabaseUser, Session } from '@supabase/supabase-js';
 
 interface User {
   id: string;
@@ -37,38 +38,95 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    checkAuth();
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (session?.user) {
+          await fetchUserProfile(session.user);
+        } else {
+          setUser(null);
+        }
+        setIsLoading(false);
+      }
+    );
+
+    // Check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        fetchUserProfile(session.user);
+      } else {
+        setIsLoading(false);
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
-  const checkAuth = async () => {
+  const fetchUserProfile = async (supabaseUser: SupabaseUser) => {
     try {
-      const response = await authApi.getCurrentUser();
-      if (response.success) {
-        setUser(response.data.user);
+      const { data: profile, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('user_id', supabaseUser.id)
+        .single();
+
+      if (error) {
+        console.error('Error fetching profile:', error);
+        return;
+      }
+
+      if (profile) {
+        setUser({
+          id: profile.user_id,
+          name: profile.name,
+          email: supabaseUser.email || '',
+          role: profile.role as 'student' | 'mentor',
+          totalXp: profile.total_xp,
+          level: profile.level,
+          hasStartedCareer: profile.has_started_career,
+          currentCareer: profile.current_career,
+          quizCompleted: profile.quiz_completed
+        });
       }
     } catch (error) {
-      console.log('Not authenticated');
-    } finally {
-      setIsLoading(false);
+      console.error('Error fetching user profile:', error);
     }
   };
 
   const login = async (email: string, password: string) => {
-    const response = await authApi.login(email, password);
-    if (response.success) {
-      setUser(response.data.user);
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    
+    if (error) {
+      throw new Error(error.message);
     }
   };
 
   const register = async (name: string, email: string, password: string, role: string = 'student') => {
-    const response = await authApi.register(name, email, password, role);
-    if (response.success) {
-      setUser(response.data.user);
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: `${window.location.origin}/`,
+        data: {
+          name,
+          role
+        }
+      }
+    });
+    
+    if (error) {
+      throw new Error(error.message);
     }
   };
 
   const logout = async () => {
-    await authApi.logout();
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      throw new Error(error.message);
+    }
     setUser(null);
   };
 
