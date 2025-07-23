@@ -1,36 +1,39 @@
-import { quizService } from './supabaseServices';
-import { quizQuestions } from '@/data/quizQuestions';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
 
 export const quizApi = {
   async getQuestions() {
-    return { data: { questions: quizQuestions } };
+    const res = await fetch(`${API_BASE_URL}/quiz/questions`, {
+      credentials: 'include',
+    });
+    if (!res.ok) throw new Error('Failed to fetch quiz questions');
+    return res.json();
   },
 
   async submitAnswers(answers: { questionId: number; score: number; category: string }[]) {
-    // Calculate total score and determine recommendations
-    const totalScore = answers.reduce((sum, answer) => sum + answer.score, 0);
-    const categoryScores = answers.reduce((acc, answer) => {
-      acc[answer.category] = (acc[answer.category] || 0) + answer.score;
-      return acc;
-    }, {} as Record<string, number>);
-    
-    // Get top 3 categories as recommendations
-    const recommendations = Object.entries(categoryScores)
-      .sort(([,a], [,b]) => b - a)
-      .slice(0, 3)
-      .map(([category]) => category);
-    
-    await quizService.submitQuizResults(answers, totalScore, recommendations);
-    return { success: true, data: { totalScore, recommendations } };
+    const res = await fetch(`${API_BASE_URL}/quiz/submit`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ answers }),
+    });
+    if (!res.ok) throw new Error('Failed to submit quiz');
+    return res.json();
   },
 
   async getProgress() {
-    const result = await quizService.getQuizResults();
-    return { data: result };
+    const res = await fetch(`${API_BASE_URL}/quiz/progress`, {
+      credentials: 'include',
+    });
+    if (!res.ok) throw new Error('Failed to fetch quiz progress');
+    return res.json();
   },
 
   async clearQuiz() {
-    // For now, just return success - could implement clearing logic if needed
-    return { success: true };
+    const res = await fetch(`${API_BASE_URL}/quiz/clear`, {
+      method: 'DELETE',
+      credentials: 'include',
+    });
+    if (!res.ok) throw new Error('Failed to clear quiz data');
+    return res.json();
   },
-};
+}; 
