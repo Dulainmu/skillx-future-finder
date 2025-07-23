@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Eye, EyeOff, User, Lock } from 'lucide-react';
-import { authApi } from '@/services/authApi';
+import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 
 const Login = () => {
@@ -14,6 +14,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { login } = useAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -23,18 +24,12 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await authApi.login(formData.email, formData.password);
+      await login(formData.email, formData.password);
       toast({
         title: 'Login Successful',
-        description: `Welcome back, ${res.data.user.name}!`,
+        description: 'Welcome back!',
       });
-      if (res.data.user.role === 'mentor') {
-        navigate('/mentor-dashboard');
-      } else if (res.data.user.hasStartedCareer) {
-        navigate('/dashboard');
-      } else {
-        navigate('/');
-      }
+      navigate('/');
     } catch (error: any) {
       toast({
         title: 'Login Failed',
